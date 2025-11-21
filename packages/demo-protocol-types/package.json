@@ -1,0 +1,19 @@
+{
+  "name": "@types/demo-protocol-event",
+  "private": false,
+  "description": "js-api通信协议事件类型约束",
+  "version": "0.0.0",
+  "type": "module",
+  "types": "./index.d.ts",
+  "scripts": {},
+  "keywords": [
+    "protocol-bridge",
+    "demo-protocol-event"
+  ],
+  "files": [
+    "index..d.ts"
+  ],
+  "author": "qunxing chen",
+  "license": "ISC",
+  "devDependencies": {}
+}
