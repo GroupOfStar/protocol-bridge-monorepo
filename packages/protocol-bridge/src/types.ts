@@ -1,24 +1,21 @@
-export type IAction = 'showLoading' | 'selectDate'
+
+export type IProtocolEvent = Record<string, (arg: any) => any>
 
 /**
 * ChannelMessage data
 */
-export type IChannelMsgData = {
+export type IChannelMsgData<T = string, R = unknown> = {
   id: number
   type: '__request__'
-  action: '__init_port__' | IAction
-  data?: unknown
+  action: T
+  data?: R
 } | {
   id: number
   type: '__response__'
-  action: '__init_port__' | IAction
+  action: T
   /**
    * 0 成功 1 失败
    */
   status: 0 | 1
-  data?: unknown
+  data?: R
 }
-
-type ICallback = (str?: string) => void
-
-export type IMessageEventHandle = (params: any, successCallback: ICallback, errorCallback: ICallback) => void

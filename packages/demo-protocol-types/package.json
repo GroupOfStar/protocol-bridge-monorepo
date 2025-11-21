@@ -1,5 +1,5 @@
 {
-  "name": "@types/demo-protocol-event",
+  "name": "demo-protocol-event",
   "private": false,
   "description": "js-api通信协议事件类型约束",
   "version": "0.0.0",

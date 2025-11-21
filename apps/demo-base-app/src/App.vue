@@ -10,13 +10,14 @@
         </div>
       </div>
     </div>
-    <iframe src="http://localhost:6173/" frameborder="0" class="my-iframe" @load="onWindowLoad"></iframe>
+    <iframe src="http://localhost:6173/" frameborder="0" class="my-iframe"
+      @load="protocolCtx.onContainerLoaded"></iframe>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
-import { offProtocolMessage, onProtocolMessage, onWindowLoad } from 'protocol-bridge'
+import { protocolCtx } from './utils/protocolBridge'
 
 // 触发的事件
 const eventName = ref('')
@@ -27,7 +28,7 @@ const eventResData = ref('')
 
 
 onMounted(() => {
-  onProtocolMessage('selectDate', (str, successCallback, errorCallback) => {
+  protocolCtx.on('selectDate', (str, successCallback, errorCallback) => {
     eventName.value = 'selectDate'
     eventParams.value = str
     if (Math.random() > 0.5) {
@@ -39,13 +40,12 @@ onMounted(() => {
     }
   })
 
-  onProtocolMessage('showLoading', (str, successCallback, errorCallback) => {
+  protocolCtx.on('showLoading', (str, successCallback, errorCallback) => {
     eventName.value = 'showLoading'
-    eventParams.value = str
+    eventParams.value = str ?? ''
     if (Math.random() > 0.5) {
-      const res = `${str ?? ''}-${Math.random()}`
-      eventResData.value = res
-      successCallback(res)
+      eventResData.value = `${str ?? ''}-${Math.random()}`
+      successCallback()
     } else {
       errorCallback()
     }
@@ -53,7 +53,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  offProtocolMessage()
+  protocolCtx.off()
 })
 
 function onClick() {

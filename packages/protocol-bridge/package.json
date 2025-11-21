@@ -25,7 +25,8 @@
     "@types/node": "^24.10.1",
     "typescript": "~5.9.3",
     "vite": "npm:rolldown-vite@7.2.2",
-    "vite-plugin-dts": "^4.5.4"
+    "vite-plugin-dts": "^4.5.4",
+    "demo-protocol-event": "workspace:*"
   },
   "homepage": "https://groupofstar.github.io/protocol-bridge/",
   "publishConfig": {

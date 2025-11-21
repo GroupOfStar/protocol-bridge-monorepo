@@ -1,10 +1,11 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createProtocolBridge } from "protocol-bridge";
+import { protocolCtx } from "./utils/protocolBridge";
 import "./index.css";
 import App from "./App.tsx";
 
-createProtocolBridge()
+protocolCtx
+  .createProtocolBridge()
   .then(() => {
     console.log("已拿到port");
   })

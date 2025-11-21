@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { emitProtocolMessage } from "protocol-bridge";
+import { protocolCtx } from "./utils/protocolBridge";
 
 export default function IframeChannel() {
   const [count, setCount] = useState(0);
@@ -13,7 +13,7 @@ export default function IframeChannel() {
 
   function handleShowLoading() {
     console.log("handleShowLoading");
-    emitProtocolMessage("showLoading", count)
+    protocolCtx.emit("showLoading", count)
       .then(data => {
         console.log("handleShowLoading res data :>> ", data);
         setState("成功");
@@ -29,7 +29,7 @@ export default function IframeChannel() {
 
   function handleSelectDate() {
     console.log("handleSelectDate");
-    emitProtocolMessage("selectDate")
+    protocolCtx.emit("selectDate")
       .then(data => {
         console.log("handleSelectDate res data :>> ", data);
         setState("成功");
