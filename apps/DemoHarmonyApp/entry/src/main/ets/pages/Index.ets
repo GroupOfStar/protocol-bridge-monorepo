@@ -1,6 +1,7 @@
 import { webview } from '@kit.ArkWeb';
 import { BusinessError } from '@kit.BasicServicesKit';
-import { handleIframeLoad, registerMessageEvent, unRegisterMessageEvent } from '../utils/channelMessage';
+import { onContainerLoaded, registerMessageEvent, unRegisterMessageEvent } from '../utils/channelMessage';
+import { createArkWebChannelPlugin } from './../utils/arkWebChannalPlugin'
 
 @Entry
 @Component
@@ -18,6 +19,15 @@ struct Index {
 
     registerMessageEvent('showLoading', (params, successCallback, errorCallback) => {
       console.log('showLoading params :>> ', params);
+      if (Math.random() > 0.5) {
+        successCallback('successfully')
+      } else {
+        errorCallback('error')
+      }
+    })
+
+    registerMessageEvent('selectDate', (params, successCallback, errorCallback) => {
+      console.log('selectDate params :>> ', params);
       if (Math.random() > 0.5) {
         successCallback('successfully')
       } else {
@@ -48,7 +58,7 @@ struct Index {
         .javaScriptAccess(true)
         .fileAccess(true)
         .domStorageAccess(true)
-        .onPageEnd(() => handleIframeLoad(this.controller))
+        .onPageEnd(() => onContainerLoaded(createArkWebChannelPlugin(this.controller)))
     }
   }
 }

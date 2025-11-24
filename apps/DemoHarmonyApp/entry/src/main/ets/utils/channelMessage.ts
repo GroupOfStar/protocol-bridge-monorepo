@@ -27,6 +27,12 @@ type IMessageEventHandle = (params: string | number, successCallback: ICallback,
 
 const MessageEventMap = new Map<IAction, IMessageEventHandle>()
 
+export interface IChannelPlugin {
+  onMessageEvent(listener: (data: string) => void): void
+  postMessageEvent(resMsg: string): void
+  containerPostMessage(initPortMsg: string): void
+}
+
 /**
  * 注册事件
  */
@@ -49,17 +55,12 @@ export function unRegisterMessageEvent(action?: IAction) {
  * iframe onload方法
  * @param payload
  */
-export function handleIframeLoad(controller: webview.WebviewController) {
-  const ports = controller.createWebMessagePorts()
-  // port[0]自己用，port[1]给iframe
-  const parentPort = ports[0]
-
+export function onContainerLoaded(channelPlugin: IChannelPlugin) {
   const initPortMsgId = Date.now() + Math.random();
-
   // 等待回复
-  function handler(result: webview.WebMessage) {
-    if (typeof result === 'string') {
-      const resObj: IChannelMsgData = JSON.parse(result)
+  function handler(data: string) {
+    if (typeof data === 'string') {
+      const resObj: IChannelMsgData = JSON.parse(data)
       console.log('handleIframeLoad resObj :>> ', resObj);
       if (resObj.type === "__response__") {
         if (resObj.action === '__init_port__' && resObj.id === initPortMsgId) {
@@ -78,7 +79,7 @@ export function handleIframeLoad(controller: webview.WebviewController) {
               status: 0,
               data: res
             }
-            parentPort.postMessageEvent(JSON.stringify(resMsgData))
+            channelPlugin.postMessageEvent(JSON.stringify(resMsgData))
           }, (err: any) => {
             const resMsgData: IChannelMsgData = {
               ...resObj,
@@ -86,7 +87,7 @@ export function handleIframeLoad(controller: webview.WebviewController) {
               status: 1,
               data: err
             }
-            parentPort.postMessageEvent(JSON.stringify(resMsgData))
+            channelPlugin.postMessageEvent(JSON.stringify(resMsgData))
           })
         } else {
           console.log('未注册该事件');
@@ -94,12 +95,12 @@ export function handleIframeLoad(controller: webview.WebviewController) {
       }
     }
   };
-  parentPort.onMessageEvent(handler);
+  channelPlugin.onMessageEvent(handler)
 
   const initPortMsgReq: IChannelMsgData = {
     id: initPortMsgId,
     type: '__request__',
     action: '__init_port__',
   }
-  controller.postMessage(JSON.stringify(initPortMsgReq), [ports[1]], '*');
+  channelPlugin.containerPostMessage(JSON.stringify(initPortMsgReq))
 }

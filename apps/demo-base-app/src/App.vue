@@ -11,12 +11,13 @@
       </div>
     </div>
     <iframe src="http://localhost:6173/" frameborder="0" class="my-iframe"
-      @load="protocolCtx.onContainerLoaded"></iframe>
+      @load="ev => protocolCtx.onContainerLoaded(createWebChannelPlugin(ev))"></iframe>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
+import { createWebChannelPlugin } from "protocol-bridge";
 import { protocolCtx } from './utils/protocolBridge'
 
 // 触发的事件

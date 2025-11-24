@@ -1,5 +1,9 @@
-import type { IProtocolEvent, IChannelMsgData } from "./types";
+import type { IProtocolEvent, IProtocolBridgeData } from "./types";
 
+/**
+ * 使用通信上下文
+ * @returns 
+ */
 export function useProtocolContext<EventMap extends IProtocolEvent>() {
   let h5Port: MessagePort | undefined = undefined;
   return {
@@ -11,10 +15,10 @@ export function useProtocolContext<EventMap extends IProtocolEvent>() {
       return new Promise<void>((resolve, reject) => {
         function handleChannelMessage(ev: MessageEvent<string>) {
           if (typeof ev.data === 'string') {
-            const reqObj: IChannelMsgData = JSON.parse(ev.data)
+            const reqObj: IProtocolBridgeData = JSON.parse(ev.data)
             if (reqObj.type === "__request__" && reqObj.action === '__init_port__') {
               h5Port = ev.ports[0]; // 1. 保存从应用侧发送过来的端口。
-              const initPortMsgRes: IChannelMsgData = {
+              const initPortMsgRes: IProtocolBridgeData = {
                 ...reqObj,
                 type: '__response__',
                 status: 0
@@ -33,7 +37,7 @@ export function useProtocolContext<EventMap extends IProtocolEvent>() {
       })
     },
     /**
-     * 发送通信事件
+     * 触发通信事件
      * @param action 
      * @param message 
      * @returns 
@@ -45,7 +49,7 @@ export function useProtocolContext<EventMap extends IProtocolEvent>() {
           return reject('请先使用 createProtocolBridge 进行初始化！')
         }
         const sendMsgId = Date.now() + Math.random();
-        const messageData: IChannelMsgData<K> = {
+        const messageData: IProtocolBridgeData<K> = {
           id: sendMsgId,
           type: '__request__',
           action,
@@ -54,7 +58,7 @@ export function useProtocolContext<EventMap extends IProtocolEvent>() {
         // 等待回复
         const handler = (ev: MessageEvent<string>) => {
           if (typeof ev.data === 'string') {
-            const resObj: IChannelMsgData<K, IReturn> = JSON.parse(ev.data)
+            const resObj: IProtocolBridgeData<K, IReturn> = JSON.parse(ev.data)
             if (resObj.type !== "__response__") return reject()
             if (resObj.action === action) {
               console.log('回复的resObj :>> ', resObj);

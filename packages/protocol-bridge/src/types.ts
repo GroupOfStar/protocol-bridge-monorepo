@@ -1,10 +1,13 @@
 
+/**
+ * 注册的通信事件类型约束
+ */
 export type IProtocolEvent = Record<string, (arg: any) => any>
 
 /**
-* ChannelMessage data
-*/
-export type IChannelMsgData<T = string, R = unknown> = {
+ * 内部ProtocolBridge数据协议
+ */
+export type IProtocolBridgeData<T = string, R = unknown> = {
   id: number
   type: '__request__'
   action: T
@@ -18,4 +21,25 @@ export type IChannelMsgData<T = string, R = unknown> = {
    */
   status: 0 | 1
   data?: R
+}
+
+/**
+ * 父组件通信插件对象
+ */
+export interface IChannelPlugin {
+  /**
+   * 添加container消息通信事件
+   * @param listener 
+   */
+  onMessageEvent(listener: (data: string) => void): void
+  /**
+   * 向container发送消息
+   * @param resMsg 
+   */
+  postMessageEvent(resMsg: string): void
+  /**
+   * 基座发起注册port端口通信
+   * @param initPortMsg 
+   */
+  containerPostMessage(initPortMsg: string): void
 }
