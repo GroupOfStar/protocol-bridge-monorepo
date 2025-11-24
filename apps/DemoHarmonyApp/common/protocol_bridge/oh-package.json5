@@ -1,0 +1,9 @@
+{
+  "name": "protocol_bridge",
+  "version": "1.0.0",
+  "description": "基座应用与h5应用之间进行postMessage通信",
+  "main": "Index.ts",
+  "author": "qunxing chen",
+  "license": "Apache-2.0",
+  "dependencies": {}
+}

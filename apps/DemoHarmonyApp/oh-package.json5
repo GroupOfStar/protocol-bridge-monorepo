@@ -2,6 +2,8 @@
   "modelVersion": "5.1.1",
   "description": "Please describe the basic information.",
   "dependencies": {
+    "protocol_bridge": "file:common/protocol_bridge/build/default/outputs/default/protocol_bridge.har"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "dynamicDependencies": {}
 }

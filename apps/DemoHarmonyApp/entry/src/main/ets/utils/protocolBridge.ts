@@ -1,4 +1,4 @@
-import { createProtocolContext } from "protocol-bridge";
+import { createProtocolContext } from "protocol_bridge";
 
 type IDemoProtocolEventMap = {
   selectDate: (payload: string) => string
