@@ -61,7 +61,6 @@ export function useProtocolContext<EventMap extends IProtocolEvent>() {
             const resObj: IProtocolBridgeData<K, IReturn> = JSON.parse(ev.data)
             if (resObj.type !== "__response__") return reject()
             if (resObj.action === action) {
-              console.log('回复的resObj :>> ', resObj);
               if (resObj.id === sendMsgId) {
                 if (resObj.status === 0) {
                   resolve(resObj.data!);

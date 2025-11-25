@@ -80,6 +80,11 @@ npm publish --access public
 
 ### 2.2 鸿蒙ohpm包的发布
 
+```bash
+cd ./apps/DemoHarmonyApp
+ohpm publish ./common/protocol_bridge/build/default/outputs/default/protocol_bridge.har
+```
+
 参考
 
 - [发布共享包](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/ide-har-publish)

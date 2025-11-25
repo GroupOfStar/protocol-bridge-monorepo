@@ -22,16 +22,13 @@ export function createProtocolContext<EventMap extends IProtocolEvent>() {
       function handler(data: string) {
         if (typeof data === 'string') {
           const resObj: IProtocolBridgeData = JSON.parse(data)
-          console.log('handleIframeLoad resObj :>> ', resObj);
           if (resObj.type === "__response__") {
             if (resObj.action === '__init_port__' && resObj.id === initPortMsgId) {
               console.log('连接成功')
             }
           } else if (resObj.type === "__request__") {
-            console.log('接收到的resObj :>> ', resObj);
             const action = resObj.action as IAction
             const messageEvent = MessageEventMap.get(action)
-            console.log('MessageEventMap.has(action) :>> ', MessageEventMap.has(action));
             if (messageEvent) {
               messageEvent(resObj.data as string, (res: any) => {
                 const resMsgData: IProtocolBridgeData = {

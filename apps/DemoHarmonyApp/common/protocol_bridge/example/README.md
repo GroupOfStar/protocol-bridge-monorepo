@@ -1,3 +1,4 @@
+
 ## How to use
 
 - 创建协议上下文
@@ -22,8 +23,8 @@ export const protocolCtx = createProtocolContext<IDemoProtocolEventMap>()
 ```ArkTs
 import { webview } from '@kit.ArkWeb';
 import { BusinessError } from '@kit.BasicServicesKit';
-import { onContainerLoaded, registerMessageEvent, unRegisterMessageEvent } from '../utils/channelMessage';
-import { createArkWebChannelPlugin } from './../utils/arkWebChannalPlugin'
+import { createArkWebChannelPlugin } from 'protocol-bridge'
+import { protocolCtx } from '../utils/protocolBridge';
 
 @Entry
 @Component
@@ -35,7 +36,8 @@ struct Index {
     // 配置Web开启无线调试模式，指定TCP Socket的端口。
     webview.WebviewController.setWebDebuggingAccess(true);
 
-    registerMessageEvent('showLoading', (params, successCallback, errorCallback) => {
+    // 注册事件
+    protocolCtx.on('showLoading', (params, successCallback, errorCallback) => {
       console.log('showLoading params :>> ', params);
       if (Math.random() > 0.5) {
         successCallback('successfully')
@@ -44,7 +46,8 @@ struct Index {
       }
     })
 
-    registerMessageEvent('selectDate', (params, successCallback, errorCallback) => {
+    // 注册事件
+    protocolCtx.on('selectDate', (params, successCallback, errorCallback) => {
       console.log('selectDate params :>> ', params);
       if (Math.random() > 0.5) {
         successCallback('successfully')
@@ -55,7 +58,7 @@ struct Index {
   }
 
   aboutToDisappear(): void {
-    unRegisterMessageEvent()
+    protocolCtx.off()
   }
 
   build() {
@@ -76,7 +79,7 @@ struct Index {
         .javaScriptAccess(true)
         .fileAccess(true)
         .domStorageAccess(true)
-        .onPageEnd(() => onContainerLoaded(createArkWebChannelPlugin(this.controller)))
+        .onPageEnd(() => protocolCtx.onContainerLoaded(createArkWebChannelPlugin(this.controller)))
     }
   }
 }

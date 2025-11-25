@@ -2,7 +2,7 @@
   "name": "protocol-bridge",
   "private": false,
   "description": "js-api通信协议实现包",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.es.js",
@@ -28,7 +28,8 @@
     "vite-plugin-dts": "^4.5.4",
     "demo-protocol-event": "workspace:*"
   },
-  "homepage": "https://groupofstar.github.io/protocol-bridge/",
+  "homepage": "https://github.com/GroupOfStar",
+  "repository": "https://github.com/GroupOfStar/protocol-bridge-monorepo",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   }
