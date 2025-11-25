@@ -13,7 +13,8 @@ export default function IframeChannel() {
 
   function handleShowLoading() {
     console.log("handleShowLoading");
-    protocolCtx.emit("showLoading", count)
+    protocolCtx
+      .emit("showLoading", count)
       .then(data => {
         console.log("handleShowLoading res data :>> ", data);
         setState("成功");
@@ -29,7 +30,8 @@ export default function IframeChannel() {
 
   function handleSelectDate() {
     console.log("handleSelectDate");
-    protocolCtx.emit("selectDate")
+    protocolCtx
+      .emit("selectDate")
       .then(data => {
         console.log("handleSelectDate res data :>> ", data);
         setState("成功");

@@ -51,6 +51,10 @@
           ]
         }
       ]
+    },
+    {
+      "name": "protocol_bridge",
+      "srcPath": "./common/protocol_bridge",
     }
   ]
 }

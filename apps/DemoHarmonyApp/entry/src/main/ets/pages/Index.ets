@@ -1,6 +1,6 @@
 import { webview } from '@kit.ArkWeb';
 import { BusinessError } from '@kit.BasicServicesKit';
-import { createArkWebChannelPlugin } from "protocol_bridge";
+import { createArkWebChannelPlugin } from "@cqx/protocol_bridge";
 import { protocolCtx } from '../utils/protocolBridge';
 
 @Entry

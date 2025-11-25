@@ -1,13 +1,11 @@
 import { webview } from "@kit.ArkWeb"
+import { IChannelPlugin } from "./types";
 
-interface IChannelPlugin {
-  onMessageEvent(listener: (data: string) => void): void
-
-  postMessageEvent(resMsg: string): void
-
-  containerPostMessage(initPortMsg: string): void
-}
-
+/**
+ * 针对 ArkWeb 基座，创建消息通信插件
+ * @param controller web容器controller
+ * @returns 父组件通信插件对象
+ */
 export function createArkWebChannelPlugin(controller: webview.WebviewController): IChannelPlugin {
   const ports = controller.createWebMessagePorts()
   // port[0]自己用，port[1]给iframe

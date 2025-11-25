@@ -1,13 +1,3 @@
-# protocol_bridge
-
-基座应用与h5应用之间进行postMessage通信
-
-## Installation
-
-```bash
-ohpm install @cqx/protocol_bridge
-```
-
 ## How to use
 
 - 创建协议上下文

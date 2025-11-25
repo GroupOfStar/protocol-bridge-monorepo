@@ -1,3 +1,3 @@
 export * from './provider'
 
-export * from './arkWebChannalPlugin'
+export * from './arkWebChannelPlugin'
