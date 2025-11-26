@@ -2,7 +2,6 @@
   "modelVersion": "5.1.1",
   "description": "Please describe the basic information.",
   "dependencies": {
-    "@cqx/protocol_bridge": "file:common/protocol_bridge/build/default/outputs/default/protocol_bridge.har"
   },
   "devDependencies": {},
   "dynamicDependencies": {}

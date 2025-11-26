@@ -1,6 +1,6 @@
 {
   "name": "@cqx/protocol_bridge",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "基座应用与h5应用之间进行postMessage通信协议",
   "main": "Index.ts",
   "author": "qunxing chen",
