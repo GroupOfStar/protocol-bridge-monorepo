@@ -1,0 +1,14 @@
+{
+  "routerMap": [
+    {
+      "name": "resourceWeb",
+      "pageSourceFile": "src/main/ets/views/ResourceWeb.ets",
+      "buildFunction": "ResourceWebBuilder"
+    },
+    {
+      "name": "httpWeb",
+      "pageSourceFile": "src/main/ets/views/HttpWeb.ets",
+      "buildFunction": "HttpWebBuilder"
+    }
+  ]
+}

@@ -12,40 +12,34 @@ export default function IframeChannel() {
   // const [replyMsg, setReplyMsg] = useState('')
 
   function handleShowLoading() {
-    console.log("handleShowLoading");
     protocolCtx
       .emit("showLoading", count)
       .then(data => {
-        console.log("handleShowLoading res data :>> ", data);
         setState("成功");
         setCount(count + 1);
         setResInfo(`${data}`);
       })
       .catch(err => {
-        console.log("err :>> ", err);
         setState("失败");
         setResInfo(`${err}`);
       });
   }
 
   function handleSelectDate() {
-    console.log("handleSelectDate");
     protocolCtx
       .emit("selectDate")
       .then(data => {
-        console.log("handleSelectDate res data :>> ", data);
         setState("成功");
         setResInfo(`${data}`);
       })
       .catch(err => {
-        console.log("err :>> ", err);
         setState("失败");
         setResInfo(`${err}`);
       });
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+    <div className="app-container">
       <div className="card">
         <div className="card_title">发送消息</div>
         <div className="card_body">
@@ -63,6 +57,10 @@ export default function IframeChannel() {
           </div>
         </div>
       </div>
+
+      {Array.from({ length: 30 }, (_item, index) => (
+        <div key={index}>填充内容</div>
+      ))}
     </div>
   );
 }

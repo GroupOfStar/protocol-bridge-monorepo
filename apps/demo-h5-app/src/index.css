@@ -52,5 +52,13 @@ button {
 body {
   background-color: #dfdfd6;
   margin: 0;
-  padding: 12px;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-top: env(safe-area-inset-top);
 }
