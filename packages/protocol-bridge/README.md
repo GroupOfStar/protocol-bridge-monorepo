@@ -125,6 +125,8 @@ export default function IframeChannel() {
 }
 ```
 
+  至此你完成了在web应用中接入h5应用的所有步骤
+
 ## 三、自定义平台通信插件
 
 如果基座应用是在harmony、平板或车机上，可以在接入时传入平台的通信方法插件，来进行通信。
@@ -134,7 +136,27 @@ export default function IframeChannel() {
 ```ts
 // ./utils/arkWebChannelPlugin.ts
 import { webview } from "@kit.ArkWeb"
-import { IChannelPlugin } from "./types";
+
+/**
+ * 基座（ArkWeb组件）通信插件对象
+ */
+export interface IChannelPlugin {
+  /**
+   * 添加container消息通信事件
+   * @param listener 
+   */
+  onMessageEvent(listener: (data: string) => void): void
+  /**
+   * 向container发送消息
+   * @param resMsg 
+   */
+  postMessageEvent(resMsg: string): void
+  /**
+   * 基座向Web容器发起注册port端口通信
+   * @param initPortMsg 
+   */
+  postContainerMessage(initPortMsg: string): void
+}
 
 /**
  * 针对 ArkWeb 基座，创建消息通信插件
@@ -152,7 +174,7 @@ export function createArkWebChannelPlugin(controller: webview.WebviewController)
     postMessageEvent(resMsg: string) {
       parentPort.postMessageEvent(resMsg)
     },
-    containerPostMessage(initPortMsg: string) {
+    postContainerMessage(initPortMsg: string) {
       controller.postMessage(initPortMsg, [ports[1]], '*');
     }
   }
@@ -160,6 +182,9 @@ export function createArkWebChannelPlugin(controller: webview.WebviewController)
 ```
 
 ```ArkTs
+import { createArkWebChannelPlugin } from "../utils/arkWebChannelPlugin";
+import { protocolCtx } from '../utils/protocolBridge'; // 跟上面 创建通信协议上下文 一样
+
 // /index.ets
   Web({ src: '', controller: this.controller })
     .javaScriptAccess(true)

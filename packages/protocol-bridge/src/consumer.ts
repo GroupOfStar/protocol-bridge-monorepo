@@ -42,7 +42,7 @@ export function useProtocolContext<EventMap extends IProtocolEvent>() {
      * @param message 
      * @returns 
      */
-    emit<K extends keyof EventMap>(action: K, message?: string | number | object) {
+    emit<K extends keyof EventMap>(action: K, message: Parameters<EventMap[K]>[0]) {
       type IReturn = ReturnType<EventMap[K]>
       return new Promise<IReturn>((resolve, reject) => {
         if (!h5Port) {

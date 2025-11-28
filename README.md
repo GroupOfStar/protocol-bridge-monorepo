@@ -62,8 +62,8 @@ pnpm run build
 ```bash
 cd ./packages/protocol-bridge
 # 查看并切换镜像源
-nvr ls
-nvr use npm
+nvm ls
+nvm use npm
 
 # 登录 npm
 npm login
@@ -91,3 +91,18 @@ ohpm publish ./common/protocol_bridge/build/default/outputs/default/protocol_bri
 - [[鸿蒙学习计划] 如何发布 第三方库到 OpenHarmony](https://developer.huawei.com/consumer/cn/forum/topic/0203154124929026022)
 
 ohpm包的发布，对README.md、CHANGELOG.md 和 LICENSE 这个三个文件有较严格的审核要求，包括版本号，更新日志，作者名等等
+
+## 三、版本管理
+
+### 3.1 先行版本号用途‌：
+
+- Dev‌：开发版，主要用于开发过程中的内部测试。
+- Alpha‌：内部测试版，表示该软件在这个阶段主要是为了开发者测试和反馈。
+- ‌Beta‌：公测版，表示该软件已较为稳定，但仍有一些未解决的问题，可供普通用户测试。
+- ‌RC‌（Release Candidate）：候选版，接近最终发布版本，但可能还有一些小问题需要修复。
+
+### 3.2 遵循一致的标记规则‌：
+
+- 使用点（.）分隔主版本号和先行版本号。
+- 先行版本号通常由一个或多个点分隔的标识符组成，例如 1.0.0-alpha.1 或 1.0.0-beta.2。
+- 使用数字来标记先行版本的不同阶段，如 alpha、beta 后面可以跟数字（例如 alpha1, alpha2）以区分不同阶段的版本。

@@ -60,7 +60,7 @@ export function createProtocolContext<EventMap extends IProtocolEvent>() {
         type: '__request__',
         action: '__init_port__',
       }
-      channelPlugin.containerPostMessage(JSON.stringify(initPortMsgReq))
+      channelPlugin.postContainerMessage(JSON.stringify(initPortMsgReq))
     },
     /**
      * 注册事件

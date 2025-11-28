@@ -1,5 +1,11 @@
 
 export declare type IDemoProtocolEventMap = {
+  /**
+   * 获取h5的页面高度
+   * @param payload h5加载完后body的scrollHeight
+   * @returns 
+   */
+  resize: (payload: number) => void
   selectDate: (payload: string) => string
   showLoading: () => void
   /**

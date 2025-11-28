@@ -101,9 +101,6 @@ importers:
       '@types/node':
         specifier: ^24.10.1
         version: 24.10.1
-      demo-protocol-event:
-        specifier: workspace:*
-        version: link:../demo-protocol-types
       typescript:
         specifier: ~5.9.3
         version: 5.9.3

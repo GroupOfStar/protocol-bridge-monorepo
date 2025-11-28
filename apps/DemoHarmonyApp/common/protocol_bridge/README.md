@@ -14,7 +14,7 @@ ohpm install @cqx/protocol_bridge
 
 ```ts
 // ./utils/protocolBridge.ts
-import { createProtocolContext } from "protocol-bridge";
+import { createProtocolContext } from "@cqx/protocol_bridge";
 
 type IDemoProtocolEventMap = {
   selectDate: (payload: string) => string
@@ -32,7 +32,7 @@ export const protocolCtx = createProtocolContext<IDemoProtocolEventMap>()
 ```ArkTs
 import { webview } from '@kit.ArkWeb';
 import { BusinessError } from '@kit.BasicServicesKit';
-import { createArkWebChannelPlugin } from 'protocol-bridge'
+import { createArkWebChannelPlugin } from "@cqx/protocol_bridge";
 import { protocolCtx } from '../utils/protocolBridge';
 
 @Entry
@@ -43,16 +43,6 @@ struct Index {
 
   aboutToAppear(): void {
     // 注册事件
-    protocolCtx.on('showLoading', (params, successCallback, errorCallback) => {
-      console.log('showLoading params :>> ', params);
-      if (Math.random() > 0.5) {
-        successCallback('successfully')
-      } else {
-        errorCallback('error')
-      }
-    })
-
-    // 注册事件
     protocolCtx.on('selectDate', (params, successCallback, errorCallback) => {
       console.log('selectDate params :>> ', params);
       if (Math.random() > 0.5) {
@@ -61,10 +51,21 @@ struct Index {
         errorCallback('error')
       }
     })
+
+    // 注册事件
+    protocolCtx.on('showLoading', (params, successCallback, errorCallback) => {
+      console.log('showLoading params :>> ', params);
+      if (Math.random() > 0.5) {
+        successCallback()
+      } else {
+        errorCallback('error')
+      }
+    })
   }
 
   aboutToDisappear(): void {
-    protocolCtx.off()
+    // 卸载所有事件
+    protocolCtx.off() // 卸载某一个事件protocolCtx.off('selectDate')
   }
 
   build() {

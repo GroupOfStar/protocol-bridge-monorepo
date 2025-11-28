@@ -1,7 +1,7 @@
 {
   "name": "@cqx/protocol_bridge",
-  "version": "1.0.0",
-  "description": "基座应用与h5应用之间进行postMessage通信协议",
+  "version": "1.0.1",
+  "description": "鸿蒙Web组件与H5应用之间进行postMessage的通信协议",
   "main": "Index.ts",
   "author": "qunxing chen",
   "license": "MIT",

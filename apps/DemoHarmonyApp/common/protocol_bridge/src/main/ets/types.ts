@@ -24,7 +24,7 @@ export type IProtocolBridgeData<T = string, R = unknown> = {
 }
 
 /**
- * 父组件通信插件对象
+ * 基座（ArkWeb组件）通信插件对象
  */
 export interface IChannelPlugin {
   /**
@@ -38,8 +38,8 @@ export interface IChannelPlugin {
    */
   postMessageEvent(resMsg: string): void
   /**
-   * 基座发起注册port端口通信
+   * 基座向Web容器发起注册port端口通信
    * @param initPortMsg 
    */
-  containerPostMessage(initPortMsg: string): void
+  postContainerMessage(initPortMsg: string): void
 }

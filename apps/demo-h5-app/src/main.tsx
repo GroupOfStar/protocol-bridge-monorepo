@@ -8,6 +8,13 @@ protocolCtx
   .createProtocolBridge()
   .then(() => {
     console.log("已拿到port");
+
+    const resizeObserver = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        protocolCtx.emit("resize", entry.target.scrollHeight);
+      }
+    });
+    resizeObserver.observe(document.body);
   })
   .catch(() => {
     console.log("链接失败");

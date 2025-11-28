@@ -11,7 +11,8 @@
       </div>
     </div>
     <iframe src="http://localhost:6173/" frameborder="0" class="my-iframe"
-      @load="ev => protocolCtx.onContainerLoaded(createWebChannelPlugin(ev))"></iframe>
+      @load="ev => protocolCtx.onContainerLoaded(createWebChannelPlugin(ev))"
+      :style="{ minHeight: `${minIframeHeight ?? 0}px` }"></iframe>
   </div>
 </template>
 
@@ -20,6 +21,8 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import { createWebChannelPlugin } from "protocol-bridge";
 import { protocolCtx } from './utils/protocolBridge'
 
+// iframe的高度
+const minIframeHeight = ref(0)
 // 触发的事件
 const eventName = ref('')
 // 接受到的参数
@@ -27,18 +30,10 @@ const eventParams = ref('')
 // 接受的消息
 const eventResData = ref('')
 
-
 onMounted(() => {
-  protocolCtx.on('selectDate', (str, successCallback, errorCallback) => {
-    eventName.value = 'selectDate'
-    eventParams.value = str
-    if (Math.random() > 0.5) {
-      const res = `${str ?? ''}-${Math.random()}`
-      eventResData.value = res
-      successCallback(res)
-    } else {
-      errorCallback()
-    }
+  protocolCtx.on('resize', (str, successCallback) => {
+    minIframeHeight.value = str
+    successCallback()
   })
 
   protocolCtx.on('showLoading', (str, successCallback, errorCallback) => {
@@ -51,37 +46,23 @@ onMounted(() => {
       errorCallback()
     }
   })
+
+  protocolCtx.on('selectDate', (str, successCallback, errorCallback) => {
+    eventName.value = 'selectDate'
+    eventParams.value = str
+    if (Math.random() > 0) {
+      const res = `${str ?? ''}-${Math.random()}`
+      eventResData.value = res
+      successCallback(res)
+    } else {
+      errorCallback()
+    }
+  })
 })
 
 onUnmounted(() => {
   protocolCtx.off()
 })
-
-function onClick() {
-  // const newCount = count.value + 1
-  // myIframeRef.value?.contentWindow?.postMessage(`ha ${count.value}`, '*')
-  // const contentWindow = myIframeRef.value?.contentWindow
-  // console.log('newCount :>> ', newCount);
-  // if (contentWindow) {
-  // handleSendMessage(contentWindow, `ha ${newCount}`).then(res => {
-  //   count.value = newCount
-  //   state.value = '成功'
-  //   resInfo.value = res as string
-  // }).catch(err => {
-  //   state.value = '失败'
-  //   console.log('vue err :>> ', err);
-  //   resInfo.value = JSON.stringify(err, null, 2)
-  // })
-  // const channel = new MessageChannel();
-
-  // const port1 = channel.port1;
-  // port1.onmessage = function (event) {
-  //   console.log('Received from iframe:', event.data);
-  // };
-  // contentWindow.postMessage({ type: '__init_port__' }, '*', [channel.port2])
-  // }
-}
-
 </script>
 
 <style scoped>
@@ -92,7 +73,6 @@ function onClick() {
 }
 
 .my-iframe {
-  height: 500px;
   margin-top: 12px;
   margin-left: 24px;
 }

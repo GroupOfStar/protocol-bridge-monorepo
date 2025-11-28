@@ -1,0 +1,29 @@
+*,
+:before,
+:after {
+  box-sizing: border-box
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+:root,
+:root.light {
+  color-scheme: light;
+
+  --global-primary-color: #3c3c43;
+  --global-normal-color: #67676c;
+  --global-primary-bg: white;
+
+  color: var(--global-primary-color);
+  background-color: var(--global-primary-bg);
+}
+
+:root.dark {
+  color-scheme: dark;
+  --global-primary-color: #dfdfd6;
+  --global-normal-color: #98989f;
+  --global-primary-bg: #0009;
+}

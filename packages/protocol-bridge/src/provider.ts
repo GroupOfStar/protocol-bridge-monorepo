@@ -7,7 +7,7 @@ import type { IProtocolBridgeData, IChannelPlugin, IProtocolEvent } from "./type
 export function createProtocolContext<EventMap extends IProtocolEvent>() {
   type IAction = keyof EventMap
 
-  type IProtocolEventHandle<T extends IAction> = (params: Parameters<EventMap[T]>[0], successCallback: (str?: ReturnType<EventMap[T]>) => void, errorCallback: (str?: string) => void) => void
+  type IProtocolEventHandle<T extends IAction> = (params: Parameters<EventMap[T]>[0], successCallback: (str: ReturnType<EventMap[T]>) => void, errorCallback: (str?: string) => void) => void
 
   const MessageEventMap = new Map<IAction, IProtocolEventHandle<IAction>>()
 
@@ -60,7 +60,7 @@ export function createProtocolContext<EventMap extends IProtocolEvent>() {
         type: '__request__',
         action: '__init_port__',
       }
-      channelPlugin.containerPostMessage(JSON.stringify(initPortMsgReq))
+      channelPlugin.postContainerMessage(JSON.stringify(initPortMsgReq))
     },
     /**
      * 注册事件

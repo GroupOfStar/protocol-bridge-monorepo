@@ -14,19 +14,19 @@ struct ResourceWeb {
     // 配置Web开启无线调试模式，指定TCP Socket的端口。
     webview.WebviewController.setWebDebuggingAccess(true);
 
-    protocolCtx.on('showLoading', (params, successCallback, errorCallback) => {
-      console.log('showLoading params :>> ', params);
+    protocolCtx.on('selectDate', (params, successCallback, errorCallback) => {
+      console.log('selectDate params :>> ', params);
       if (Math.random() > 0.5) {
-        successCallback()
+        successCallback('successfully')
       } else {
         errorCallback('error')
       }
     })
 
-    protocolCtx.on('selectDate', (params, successCallback, errorCallback) => {
-      console.log('selectDate params :>> ', params);
+    protocolCtx.on('showLoading', (params, successCallback, errorCallback) => {
+      console.log('showLoading params :>> ', params);
       if (Math.random() > 0.5) {
-        successCallback('successfully')
+        successCallback()
       } else {
         errorCallback('error')
       }

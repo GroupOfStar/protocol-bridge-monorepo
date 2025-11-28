@@ -6,17 +6,13 @@ export default function IframeChannel() {
   const [state, setState] = useState<"成功" | "失败" | undefined>();
   // 父组件返回的消息
   const [resInfo, setResInfo] = useState("");
-  // // 接受的消息
-  // const [receiveMsg, setReceiveMsg] = useState('')
-  // // 回复的消息
-  // const [replyMsg, setReplyMsg] = useState('')
+  const [textNum, setTextNum] = useState(30);
 
   function handleShowLoading() {
     protocolCtx
-      .emit("showLoading", count)
+      .emit("showLoading", undefined)
       .then(data => {
         setState("成功");
-        setCount(count + 1);
         setResInfo(`${data}`);
       })
       .catch(err => {
@@ -27,9 +23,10 @@ export default function IframeChannel() {
 
   function handleSelectDate() {
     protocolCtx
-      .emit("selectDate")
+      .emit("selectDate", `${count}`)
       .then(data => {
         setState("成功");
+        setCount(count + 1);
         setResInfo(`${data}`);
       })
       .catch(err => {
@@ -58,8 +55,13 @@ export default function IframeChannel() {
         </div>
       </div>
 
-      {Array.from({ length: 30 }, (_item, index) => (
-        <div key={index}>填充内容</div>
+      {Array.from({ length: textNum }, (_item, index) => (
+        <div key={index}>
+          <span>填充内容</span>
+          <button onClick={() => setTextNum(prev => (prev ? prev - 1 : prev))}>
+            删除
+          </button>
+        </div>
       ))}
     </div>
   );

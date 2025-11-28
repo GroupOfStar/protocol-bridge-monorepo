@@ -1,11 +1,4 @@
 import { createProtocolContext } from "protocol-bridge";
-
-type IDemoProtocolEventMap = {
-  selectDate: (payload: string) => string
-  showLoading: () => void
-  'user.login': (payload: string) => boolean
-  'user.logout': (payload: number) => void
-  'user.profile.update': () => string
-}
+import type { IDemoProtocolEventMap } from 'demo-protocol-event'
 
 export const protocolCtx = createProtocolContext<IDemoProtocolEventMap>()

@@ -17,7 +17,7 @@ export function createArkWebChannelPlugin(controller: webview.WebviewController)
     postMessageEvent(resMsg: string) {
       parentPort.postMessageEvent(resMsg)
     },
-    containerPostMessage(initPortMsg: string) {
+    postContainerMessage(initPortMsg: string) {
       controller.postMessage(initPortMsg, [ports[1]], '*');
     }
   }

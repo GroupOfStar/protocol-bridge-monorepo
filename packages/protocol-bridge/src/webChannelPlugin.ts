@@ -16,9 +16,9 @@ export function createWebChannelPlugin(event: Event): IChannelPlugin {
       parentPort.start()
     },
     postMessageEvent(resMsg: string) {
-      parentPort.postMessage(JSON.stringify(resMsg))
+      parentPort.postMessage(resMsg)
     },
-    containerPostMessage(initPortMsg: string) {
+    postContainerMessage(initPortMsg: string) {
       contentWindow?.postMessage(initPortMsg, '*', [channel.port2])
     }
   }
