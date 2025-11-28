@@ -1,4 +1,4 @@
-import type { IChannelPlugin } from "./types";
+import type { IChannelPlugin } from './types';
 
 /**
  * 针对 web 基座，创建消息通信插件
@@ -6,20 +6,20 @@ import type { IChannelPlugin } from "./types";
  * @returns 父组件通信插件对象
  */
 export function createWebChannelPlugin(event: Event): IChannelPlugin {
-  const contentWindow = (event.currentTarget as HTMLIFrameElement)?.contentWindow
+  const contentWindow = (event.currentTarget as HTMLIFrameElement)?.contentWindow;
   const channel = new MessageChannel();
   // port1自己用，port2给iframe
-  const parentPort = channel.port1
+  const parentPort = channel.port1;
   return {
     onMessageEvent(listener) {
       parentPort.addEventListener('message', (event: MessageEvent) => listener(event.data));
-      parentPort.start()
+      parentPort.start();
     },
     postMessageEvent(resMsg: string) {
-      parentPort.postMessage(resMsg)
+      parentPort.postMessage(resMsg);
     },
     postContainerMessage(initPortMsg: string) {
-      contentWindow?.postMessage(initPortMsg, '*', [channel.port2])
-    }
-  }
+      contentWindow?.postMessage(initPortMsg, '*', [channel.port2]);
+    },
+  };
 }

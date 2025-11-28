@@ -16,19 +16,20 @@ npm i protocol-bridge
 
 ```ts
 // ./utils/protocolBridge.ts
-import { createProtocolContext } from "protocol-bridge";
+import { createProtocolContext } from 'protocol-bridge';
 
 // 与h5-app通信事件的类型约束保持一致, 也可把事件类型定义成一个@types的npm包
 type IDemoProtocolEventMap = {
-  selectDate: (payload: string) => string
-  showLoading: () => void
-  'user.login': (payload: string) => boolean
-  'user.logout': (payload: number) => void
-  'user.profile.update': () => string
-}
+  selectDate: (payload: string) => string;
+  showLoading: () => void;
+  'user.login': (payload: string) => boolean;
+  'user.logout': (payload: number) => void;
+  'user.profile.update': () => string;
+};
 
-export const protocolCtx = createProtocolContext<IDemoProtocolEventMap>()
+export const protocolCtx = createProtocolContext<IDemoProtocolEventMap>();
 ```
+
 - 接入子应用
 
 ```html
@@ -37,41 +38,42 @@ export const protocolCtx = createProtocolContext<IDemoProtocolEventMap>()
 </template>
 
 <script setup lang="ts">
-import { createWebChannelPlugin } from "protocol-bridge";
-import { protocolCtx } from './utils/protocolBridge'
+  import { createWebChannelPlugin } from 'protocol-bridge';
+  import { protocolCtx } from './utils/protocolBridge';
 
-onMounted(() => {
-  // 注册事件，可以在任何地方、任何时机注册
-  protocolCtx.on('selectDate', (str, successCallback, errorCallback) => {
-    if (Math.random() > 0.5) {
-      const res = `${str ?? ''}-${Math.random()}`
-      successCallback(res)
-    } else {
-      errorCallback()
-    }
-  })
-}) 
+  onMounted(() => {
+    // 注册事件，可以在任何地方、任何时机注册
+    protocolCtx.on('selectDate', (str, successCallback, errorCallback) => {
+      if (Math.random() > 0.5) {
+        const res = `${str ?? ''}-${Math.random()}`;
+        successCallback(res);
+      } else {
+        errorCallback();
+      }
+    });
+  });
 </script>
 ```
 
 ### 2.2 H5应用h5-app中
 
 - 使用通信协议上下文
+
 ```ts
 // ./utils/protocolBridge.ts
-import { useProtocolContext } from "protocol-bridge";
+import { useProtocolContext } from 'protocol-bridge';
 
 // 与base-app通信事件的类型约束保持一致
 type IDemoProtocolEventMap = {
-  selectDate: (payload: string) => string
-  showLoading: () => void
-  'user.login': (payload: string) => boolean
-  'user.logout': (payload: number) => void
-  'user.profile.update': () => string
-}
+  selectDate: (payload: string) => string;
+  showLoading: () => void;
+  'user.login': (payload: string) => boolean;
+  'user.logout': (payload: number) => void;
+  'user.profile.update': () => string;
+};
 
 // eslint-disable-next-line react-hooks/rules-of-hooks
-export const protocolCtx = useProtocolContext<IDemoProtocolEventMap>()
+export const protocolCtx = useProtocolContext<IDemoProtocolEventMap>();
 ```
 
 - 建立链接
@@ -102,30 +104,28 @@ createRoot(document.getElementById("root")!).render(
 ```
 
 - 触发事件
+
 ```tsx
-import { useState } from "react";
-import { protocolCtx } from "./utils/protocolBridge";
+import { useState } from 'react';
+import { protocolCtx } from './utils/protocolBridge';
 
 export default function IframeChannel() {
   function handleSelectDate() {
-    protocolCtx.emit("selectDate")
+    protocolCtx
+      .emit('selectDate')
       .then(data => {
-        console.log("handleSelectDate res data :>> ", data);
+        console.log('handleSelectDate res data :>> ', data);
       })
       .catch(err => {
-        console.log("err :>> ", err);
+        console.log('err :>> ', err);
       });
   }
 
-  return (
-    <button onClick={handleSelectDate}>
-      点击给父组件发送selectDate事件
-    </button>
-  );
+  return <button onClick={handleSelectDate}>点击给父组件发送selectDate事件</button>;
 }
 ```
 
-  至此你完成了在web应用中接入h5应用的所有步骤
+至此你完成了在web应用中接入h5应用的所有步骤
 
 ## 三、自定义平台通信插件
 
@@ -135,7 +135,7 @@ export default function IframeChannel() {
 
 ```ts
 // ./utils/arkWebChannelPlugin.ts
-import { webview } from "@kit.ArkWeb"
+import { webview } from '@kit.ArkWeb';
 
 /**
  * 基座（ArkWeb组件）通信插件对象
@@ -143,19 +143,19 @@ import { webview } from "@kit.ArkWeb"
 export interface IChannelPlugin {
   /**
    * 添加container消息通信事件
-   * @param listener 
+   * @param listener
    */
-  onMessageEvent(listener: (data: string) => void): void
+  onMessageEvent(listener: (data: string) => void): void;
   /**
    * 向container发送消息
-   * @param resMsg 
+   * @param resMsg
    */
-  postMessageEvent(resMsg: string): void
+  postMessageEvent(resMsg: string): void;
   /**
    * 基座向Web容器发起注册port端口通信
-   * @param initPortMsg 
+   * @param initPortMsg
    */
-  postContainerMessage(initPortMsg: string): void
+  postContainerMessage(initPortMsg: string): void;
 }
 
 /**
@@ -164,24 +164,24 @@ export interface IChannelPlugin {
  * @returns 父组件通信插件对象
  */
 export function createArkWebChannelPlugin(controller: webview.WebviewController): IChannelPlugin {
-  const ports = controller.createWebMessagePorts()
+  const ports = controller.createWebMessagePorts();
   // port[0]自己用，port[1]给iframe
-  const parentPort = ports[0]
+  const parentPort = ports[0];
   return {
     onMessageEvent(listener) {
       parentPort.onMessageEvent(listener);
     },
     postMessageEvent(resMsg: string) {
-      parentPort.postMessageEvent(resMsg)
+      parentPort.postMessageEvent(resMsg);
     },
     postContainerMessage(initPortMsg: string) {
       controller.postMessage(initPortMsg, [ports[1]], '*');
-    }
-  }
+    },
+  };
 }
 ```
 
-```ArkTs
+```ts
 import { createArkWebChannelPlugin } from "../utils/arkWebChannelPlugin";
 import { protocolCtx } from '../utils/protocolBridge'; // 跟上面 创建通信协议上下文 一样
 

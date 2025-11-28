@@ -10,7 +10,6 @@
 
 ![触发事件监听](screenshot/example02.gif)
 
-
 ## 一、安装与运行
 
 ### 1.1 protocol-bridge和H5工程

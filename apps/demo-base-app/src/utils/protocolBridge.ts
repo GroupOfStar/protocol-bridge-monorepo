@@ -1,4 +1,4 @@
-import { createProtocolContext } from "protocol-bridge";
-import type { IDemoProtocolEventMap } from 'demo-protocol-event'
+import { createProtocolContext } from 'protocol-bridge';
+import type { IDemoProtocolEventMap } from 'demo-protocol-event';
 
-export const protocolCtx = createProtocolContext<IDemoProtocolEventMap>()
+export const protocolCtx = createProtocolContext<IDemoProtocolEventMap>();

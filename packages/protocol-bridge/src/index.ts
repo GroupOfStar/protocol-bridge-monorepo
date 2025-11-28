@@ -1,5 +1,7 @@
-export * from './provider'
+export * from './provider';
 
-export * from './consumer'
+export * from './consumer';
 
-export * from './webChannelPlugin'
+export type { IChannelPlugin } from './types';
+
+export * from './webChannelPlugin';

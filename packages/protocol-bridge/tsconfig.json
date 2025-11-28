@@ -20,7 +20,7 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
+    "noUncheckedSideEffectImports": true
   },
   "include": ["src", "__test__/test.ts"],
   "exclude": ["node_modules", "dist"]
