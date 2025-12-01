@@ -1,27 +1,57 @@
 /**
+ * js类型映射
+ */
+export type IJsTypeMap = {
+  string: string;
+  boolean: boolean;
+  number: number;
+  object: object;
+  undefined: undefined;
+};
+
+/**
  * 注册的通信事件类型约束
  */
-export type IProtocolEvent = Record<string, (arg: any) => any>;
+export type IProtocolEvent =
+  | [string, keyof IJsTypeMap, keyof IJsTypeMap, keyof IJsTypeMap]
+  | [string, keyof IJsTypeMap, keyof IJsTypeMap];
+
+/**
+ * 工具类型：从事件定义中提取第N个位置的类型
+ */
+export type IEventArgType<T extends IProtocolEvent, K extends T[0], N extends number> = IJsTypeMap[Extract<
+  T,
+  [K, ...any]
+>[N]];
+
+/**
+ * map中存放的通信事件类型
+ */
+export type IProtocolEventHandle<EV extends IProtocolEvent, K extends EV[0]> = (
+  data: IEventArgType<EV, K, 1>,
+  successCallback: (arg: IEventArgType<EV, K, 2>) => void,
+  errorCallback: (arg: IEventArgType<EV, K, 3>) => void
+) => void;
 
 /**
  * 内部ProtocolBridge数据协议
  */
-export type IProtocolBridgeData<T = string, R = unknown> =
+export type IProtocolBridgeData<T extends IProtocolEvent> =
   | {
       id: number;
       type: '__request__';
-      action: T;
-      data?: R;
+      action: T[0];
+      data: IEventArgType<T, T[0], 1>;
     }
   | {
       id: number;
       type: '__response__';
-      action: T;
+      action: T[0];
       /**
        * 0 成功 1 失败
        */
       status: 0 | 1;
-      data?: R;
+      data: IEventArgType<T, T[0], 1>;
     };
 
 /**

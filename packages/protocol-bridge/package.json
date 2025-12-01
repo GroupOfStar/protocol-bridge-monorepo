@@ -1,8 +1,8 @@
 {
   "name": "protocol-bridge",
   "private": false,
-  "description": "js-api通信协议实现包",
-  "version": "1.0.0-rc.1",
+  "description": "js-api通信协议",
+  "version": "1.0.0",
   "type": "module",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.es.js",
@@ -14,7 +14,11 @@
   "keywords": [
     "protocol-bridge",
     "message-bridge",
-    "bridge"
+    "bridge",
+    "postMessage",
+    "BroadcastChannel",
+    "jsApi",
+    "跨页签通信"
   ],
   "files": [
     "dist",

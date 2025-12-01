@@ -1,4 +1,4 @@
-import type { IChannelPlugin } from './types';
+import type { IChannelPlugin } from '../types';
 
 /**
  * 针对 web 基座，创建消息通信插件

@@ -10,13 +10,9 @@
         </div>
       </div>
     </div>
-    <iframe
-      src="http://localhost:6173/"
-      frameborder="0"
-      class="my-iframe"
+    <iframe src="http://localhost:6173/" frameborder="0" class="my-iframe"
       @load="ev => protocolCtx.onContainerLoaded(createWebChannelPlugin(ev))"
-      :style="{ minHeight: `${minIframeHeight ?? 0}px` }"
-    ></iframe>
+      :style="{ minHeight: `${minIframeHeight ?? 0}px` }"></iframe>
   </div>
 </template>
 
@@ -35,9 +31,9 @@ const eventParams = ref('');
 const eventResData = ref('');
 
 onMounted(() => {
-  protocolCtx.on('resize', (str, successCallback) => {
+  protocolCtx.on('container.height.resize', (str, successCallback) => {
     minIframeHeight.value = str;
-    successCallback();
+    successCallback(undefined);
   });
 
   protocolCtx.on('showLoading', (str, successCallback, errorCallback) => {
@@ -45,9 +41,9 @@ onMounted(() => {
     eventParams.value = str ?? '';
     if (Math.random() > 0.5) {
       eventResData.value = `${str ?? ''}-${Math.random()}`;
-      successCallback();
+      successCallback(undefined);
     } else {
-      errorCallback();
+      errorCallback(undefined);
     }
   });
 
@@ -59,13 +55,13 @@ onMounted(() => {
       eventResData.value = res;
       successCallback(res);
     } else {
-      errorCallback();
+      errorCallback(undefined);
     }
   });
 });
 
 onUnmounted(() => {
-  protocolCtx.off();
+  protocolCtx.off('*');
 });
 </script>
 

@@ -1,5 +1,9 @@
 # 版本记录
 
+## [v1.0.2-rc] 2025-12-1
+- Release candidate version 1.0.2-rc
+- 更换类型映射定义方式
+
 ## [v1.0.1] 2025-11-28
 - Release version 1.0.1
 

@@ -11,7 +11,7 @@ protocolCtx
 
     const resizeObserver = new ResizeObserver(entries => {
       for (const entry of entries) {
-        protocolCtx.emit('resize', entry.target.scrollHeight);
+        protocolCtx.emit('container.height.resize', entry.target.scrollHeight);
       }
     });
     resizeObserver.observe(document.body);

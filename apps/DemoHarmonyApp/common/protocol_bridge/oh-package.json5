@@ -1,12 +1,12 @@
 {
   "name": "@cqx/protocol_bridge",
-  "version": "1.0.1",
+  "version": "1.0.2-rc",
   "description": "鸿蒙Web组件与H5应用之间进行postMessage的通信协议",
   "main": "Index.ts",
   "author": "qunxing chen",
   "license": "MIT",
   "keywords": ["jsapi", "protocol", "bridge", "postMessage", "web bridge"],
   "homepage": "https://github.com/GroupOfStar",
-  "repository": "https://github.com/GroupOfStar/protocol-bridge-monorepo",
+  "repository": "https://github.com/GroupOfStar/protocol-bridge-monorepo/tree/main/packages/protocol-bridge",
   "dependencies": {}
 }

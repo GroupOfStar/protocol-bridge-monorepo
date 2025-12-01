@@ -1,10 +1,12 @@
 # protocol-bridge
 
-基座应用与h5应用之间进行postMessage通信
+具有事件名和事件参数类型提示的 `Emitter` 类型的通信协议，具体包含：
+1. 基座应用与h5应用之间进行postMessage通信；
+2. 在Web应用中进行跨页签通信。
 
 ## 一、安装
 
-```shell
+```bash
 npm i protocol-bridge
 ```
 
@@ -18,16 +20,48 @@ npm i protocol-bridge
 // ./utils/protocolBridge.ts
 import { createProtocolContext } from 'protocol-bridge';
 
-// 与h5-app通信事件的类型约束保持一致, 也可把事件类型定义成一个@types的npm包
-type IDemoProtocolEventMap = {
-  selectDate: (payload: string) => string;
-  showLoading: () => void;
-  'user.login': (payload: string) => boolean;
-  'user.logout': (payload: number) => void;
-  'user.profile.update': () => string;
-};
+/**
+ * 通信事件类型定义
+ * 1. 第一个参数表示事件名, 第二个参数表示触发事件时的传参, 第三个参数表示监听到事件后成功情况下返回的参数, 第四个参数为可选的表示失败情况下返回的参数
+ * 2. 与h5-app通信事件的类型约束保持一致, 也可把事件类型定义成一个@types的npm包
+ */
+type IDemoProtocolEventMap =
+  | ['container.height.resize', 'number', 'undefined']
+  | ['selectDate', 'string', 'string', 'undefined']
+  | ['showLoading', 'undefined', 'undefined']
+  | ['user.login', 'string', 'boolean', 'undefined']
+  | ['user.logout', 'number', 'undefined', 'undefined']
+  | ['user.profile.update', 'undefined', 'string', 'undefined'];
 
 export const protocolCtx = createProtocolContext<IDemoProtocolEventMap>();
+```
+
+`IDemoProtocolEventMap` 必须受到 `IProtocolEvent` 的约束，即：
+
+```ts
+function createProtocolContext<EV extends IProtocolEvent>() {}
+```
+
+其中
+
+```ts
+/**
+ * js类型映射
+ */
+type IJsTypeMap = {
+  string: string;
+  boolean: boolean;
+  number: number;
+  object: object;
+  undefined: undefined;
+};
+
+/**
+ * 注册的通信事件类型约束
+ */
+type IProtocolEvent =
+  | [string, keyof IJsTypeMap, keyof IJsTypeMap, keyof IJsTypeMap]
+  | [string, keyof IJsTypeMap, keyof IJsTypeMap];
 ```
 
 - 接入子应用
@@ -48,7 +82,7 @@ export const protocolCtx = createProtocolContext<IDemoProtocolEventMap>();
         const res = `${str ?? ''}-${Math.random()}`;
         successCallback(res);
       } else {
-        errorCallback();
+        errorCallback(undefined);
       }
     });
   });
@@ -64,13 +98,13 @@ export const protocolCtx = createProtocolContext<IDemoProtocolEventMap>();
 import { useProtocolContext } from 'protocol-bridge';
 
 // 与base-app通信事件的类型约束保持一致
-type IDemoProtocolEventMap = {
-  selectDate: (payload: string) => string;
-  showLoading: () => void;
-  'user.login': (payload: string) => boolean;
-  'user.logout': (payload: number) => void;
-  'user.profile.update': () => string;
-};
+type IDemoProtocolEventMap =
+  | ['container.height.resize', 'number', 'undefined']
+  | ['selectDate', 'string', 'string', 'undefined']
+  | ['showLoading', 'undefined', 'undefined']
+  | ['user.login', 'string', 'boolean', 'undefined']
+  | ['user.logout', 'number', 'undefined', 'undefined']
+  | ['user.profile.update', 'undefined', 'string', 'undefined'];
 
 // eslint-disable-next-line react-hooks/rules-of-hooks
 export const protocolCtx = useProtocolContext<IDemoProtocolEventMap>();
@@ -91,9 +125,15 @@ protocolCtx
   .createProtocolBridge()
   .then(() => {
     console.log("已拿到port");
+    const resizeObserver = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        protocolCtx.emit('container.height.resize', entry.target.scrollHeight);
+      }
+    });
+    resizeObserver.observe(document.body);
   })
   .catch(() => {
-    console.log("链接失败");
+    console.log("连接失败");
   });
 
 createRoot(document.getElementById("root")!).render(
@@ -112,7 +152,7 @@ import { protocolCtx } from './utils/protocolBridge';
 export default function IframeChannel() {
   function handleSelectDate() {
     protocolCtx
-      .emit('selectDate')
+      .emit('selectDate', '2025-12-1')
       .then(data => {
         console.log('handleSelectDate res data :>> ', data);
       })
@@ -126,6 +166,63 @@ export default function IframeChannel() {
 ```
 
 至此你完成了在web应用中接入h5应用的所有步骤
+
+### 2.3 在Web应用中进行跨页签通信
+
+- 创建通信Emitter
+
+```ts
+// ./src/utils/channelEmitter.ts
+import { createChannelEmitter } from 'protocol-bridge';
+
+type IBroadcastChannelEventMap = ['setCount', 'number', 'number', 'undefined'];
+
+export const channelEmitter = createChannelEmitter<IBroadcastChannelEventMap>();
+```
+
+- 使用通信Emitter中添加事件监听
+
+```ts
+<script setup lang="ts">
+import { onMounted, onUnmounted, ref } from 'vue';
+import { channelEmitter } from '../utils/channelEmitter';
+
+const count = ref(0);
+
+onMounted(() => {
+  channelEmitter.on('setCount', (data, successCallback) => {
+    count.value = data;
+    successCallback(data);
+  });
+});
+
+onUnmounted(() => {
+  channelEmitter.off('setCount')
+});
+</script>
+```
+
+- 使用通信Emitter中触发事件监听
+
+```ts
+<script setup lang="ts">
+import { ref } from 'vue';
+import { channelEmitter } from '../utils/channelEmitter';
+
+const count = ref(0);
+
+function onCountClick() {
+  channelEmitter
+    .emit('setCount', count.value)
+    .then(res => {
+      count.value = res + 1;
+    })
+    .catch(err => {
+      console.log('🚀 ~ BroadcastChannelChild.vue:20 ~ onCountClick ~ err:', err);
+    });
+}
+</script>
+```
 
 ## 三、自定义平台通信插件
 

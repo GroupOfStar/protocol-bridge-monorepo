@@ -10,21 +10,52 @@ ohpm install @cqx/protocol_bridge
 
 ## How to use
 
-- 创建协议上下文
+- 创建通信协议上下文
 
 ```ts
 // ./utils/protocolBridge.ts
-import { createProtocolContext } from "@cqx/protocol_bridge";
+import { createProtocolContext } from '@cqx/protocol-bridge';
 
-type IDemoProtocolEventMap = {
-  selectDate: (payload: string) => string
-  showLoading: () => void
-  'user.login': (payload: string) => boolean
-  'user.logout': (payload: number) => void
-  'user.profile.update': () => string
-}
+/**
+ * 通信事件类型定义
+ * 第一个参数表示事件名, 第二个参数表示触发事件时的传参, 第三个参数表示监听到事件后成功情况下返回的参数, 第四个参数为可选的表示失败情况下返回的参数
+ */
+type IDemoProtocolEventMap =
+  | ['selectDate', 'string', 'string', 'undefined']
+  | ['showLoading', 'undefined', 'undefined']
+  | ['user.login', 'string', 'boolean', 'undefined']
+  | ['user.logout', 'number', 'undefined', 'undefined']
+  | ['user.profile.update', 'undefined', 'string', 'undefined'];
 
-export const protocolCtx = createProtocolContext<IDemoProtocolEventMap>()
+export const protocolCtx = createProtocolContext<IDemoProtocolEventMap>();
+```
+
+`IDemoProtocolEventMap` 必须受到 `IProtocolEvent` 的约束，即：
+
+```ts
+function createProtocolContext<EV extends IProtocolEvent>() {}
+```
+
+其中
+
+```ts
+/**
+ * js类型映射
+ */
+type IJsTypeMap = {
+  string: string;
+  boolean: boolean;
+  number: number;
+  object: object;
+  undefined: undefined;
+};
+
+/**
+ * 注册的通信事件类型约束
+ */
+type IProtocolEvent =
+  | [string, keyof IJsTypeMap, keyof IJsTypeMap, keyof IJsTypeMap]
+  | [string, keyof IJsTypeMap, keyof IJsTypeMap];
 ```
 
 - 接入子应用
@@ -43,29 +74,29 @@ struct Index {
 
   aboutToAppear(): void {
     // 注册事件
+    protocolCtx.on('showLoading', (params, successCallback, errorCallback) => {
+      console.log('showLoading params :>> ', params);
+      if (Math.random() > 0.5) {
+        successCallback(undefined)
+      } else {
+        errorCallback('')
+      }
+    })
+
+    // 注册事件
     protocolCtx.on('selectDate', (params, successCallback, errorCallback) => {
       console.log('selectDate params :>> ', params);
       if (Math.random() > 0.5) {
         successCallback('successfully')
       } else {
-        errorCallback('error')
-      }
-    })
-
-    // 注册事件
-    protocolCtx.on('showLoading', (params, successCallback, errorCallback) => {
-      console.log('showLoading params :>> ', params);
-      if (Math.random() > 0.5) {
-        successCallback()
-      } else {
-        errorCallback('error')
+        errorCallback(undefined)
       }
     })
   }
 
   aboutToDisappear(): void {
     // 卸载所有事件
-    protocolCtx.off() // 卸载某一个事件protocolCtx.off('selectDate')
+    protocolCtx.off("*") // 卸载某一个事件protocolCtx.off('selectDate')
   }
 
   build() {
@@ -91,8 +122,6 @@ struct Index {
   }
 }
 ```
-
-
 
 ## More information
 

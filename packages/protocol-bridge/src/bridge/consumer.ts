@@ -1,10 +1,10 @@
-import type { IProtocolEvent, IProtocolBridgeData } from './types';
+import type { IProtocolEvent, IProtocolBridgeData, IEventArgType } from '../types';
 
 /**
  * 使用通信上下文
  * @returns
  */
-export function useProtocolContext<EventMap extends IProtocolEvent>() {
+export function useProtocolContext<EV extends IProtocolEvent>() {
   let h5Port: MessagePort | undefined = undefined;
   return {
     /**
@@ -15,11 +15,10 @@ export function useProtocolContext<EventMap extends IProtocolEvent>() {
       return new Promise<void>((resolve, reject) => {
         function handleChannelMessage(ev: MessageEvent<string>) {
           if (typeof ev.data === 'string') {
-            const reqObj: IProtocolBridgeData = JSON.parse(ev.data);
-            console.log('reqObj :>> ', reqObj);
+            const reqObj: IProtocolBridgeData<EV> = JSON.parse(ev.data);
             if (reqObj.type === '__request__' && reqObj.action === '__init_port__') {
               h5Port = ev.ports[0]; // 1. 保存从应用侧发送过来的端口。
-              const initPortMsgRes: IProtocolBridgeData = {
+              const initPortMsgRes: IProtocolBridgeData<EV> = {
                 ...reqObj,
                 type: '__response__',
                 status: 0,
@@ -43,14 +42,13 @@ export function useProtocolContext<EventMap extends IProtocolEvent>() {
      * @param message
      * @returns
      */
-    emit<K extends keyof EventMap>(action: K, message: Parameters<EventMap[K]>[0]) {
-      type IReturn = ReturnType<EventMap[K]>;
-      return new Promise<IReturn>((resolve, reject) => {
+    emit<K extends EV[0]>(action: Exclude<K, '*'>, message: IEventArgType<EV, K, 1>) {
+      return new Promise<IEventArgType<EV, K, 2>>((resolve, reject) => {
         if (!h5Port) {
           return reject('请先使用 createProtocolBridge 进行初始化！');
         }
         const sendMsgId = Date.now() + Math.random();
-        const messageData: IProtocolBridgeData<K> = {
+        const messageData: IProtocolBridgeData<EV> = {
           id: sendMsgId,
           type: '__request__',
           action,
@@ -59,20 +57,14 @@ export function useProtocolContext<EventMap extends IProtocolEvent>() {
         // 等待回复
         const handler = (ev: MessageEvent<string>) => {
           if (typeof ev.data === 'string') {
-            const resObj: IProtocolBridgeData<K, IReturn> = JSON.parse(ev.data);
-            if (resObj.type !== '__response__') return reject();
-            if (resObj.action === action) {
-              if (resObj.id === sendMsgId) {
-                if (resObj.status === 0) {
-                  resolve(resObj.data!);
-                } else {
-                  reject(resObj.data);
-                }
+            const resObj: IProtocolBridgeData<EV> = JSON.parse(ev.data);
+            const { type, id, action, data } = resObj;
+            if (type === '__response__' && id === sendMsgId && action === action) {
+              if (resObj.status === 0) {
+                resolve(data);
               } else {
-                reject('出现了接受到的消息与发送到的消息id不一致情况~');
+                reject(data);
               }
-            } else {
-              reject('方法不存在，或不一致');
             }
           }
           h5Port?.removeEventListener('message', handler);

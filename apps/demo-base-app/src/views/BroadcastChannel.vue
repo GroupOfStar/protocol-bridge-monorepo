@@ -23,5 +23,7 @@ onMounted(() => {
   });
 });
 
-onUnmounted(() => {});
+onUnmounted(() => {
+  channelEmitter.off('setCount')
+});
 </script>

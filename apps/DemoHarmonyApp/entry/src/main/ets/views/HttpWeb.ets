@@ -15,9 +15,9 @@ struct HttpWeb {
     protocolCtx.on('showLoading', (params, successCallback, errorCallback) => {
       console.log('showLoading params :>> ', params);
       if (Math.random() > 0.5) {
-        successCallback()
+        successCallback(undefined)
       } else {
-        errorCallback('error')
+        errorCallback('')
       }
     })
 
@@ -26,13 +26,13 @@ struct HttpWeb {
       if (Math.random() > 0.5) {
         successCallback('successfully')
       } else {
-        errorCallback('error')
+        errorCallback(undefined)
       }
     })
   }
 
   aboutToDisappear(): void {
-    protocolCtx.off()
+    protocolCtx.off("*")
   }
 
   // 后退点击
