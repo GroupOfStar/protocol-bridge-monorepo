@@ -2,6 +2,7 @@ import { webview } from '@kit.ArkWeb';
 import { BusinessError } from '@kit.BasicServicesKit';
 import { createArkWebChannelPlugin } from "@cqx/protocol_bridge";
 import { protocolCtx } from '../utils/protocolBridge';
+import './../jsApi/index' // 可以在任何地方注册事件，只要在Web build之前导入执行过即可
 
 @ComponentV2
 struct ResourceWeb {
@@ -14,21 +15,13 @@ struct ResourceWeb {
     // 配置Web开启无线调试模式，指定TCP Socket的端口。
     webview.WebviewController.setWebDebuggingAccess(true);
 
+    // 也可以在此处注册事件
     protocolCtx.on('selectDate', (params, successCallback, errorCallback) => {
       console.log('selectDate params :>> ', params);
       if (Math.random() > 0.5) {
         successCallback('successfully')
       } else {
         errorCallback(undefined)
-      }
-    })
-
-    protocolCtx.on('showLoading', (params, successCallback, errorCallback) => {
-      console.log('showLoading params :>> ', params);
-      if (Math.random() > 0.5) {
-        successCallback(undefined)
-      } else {
-        errorCallback('')
       }
     })
   }

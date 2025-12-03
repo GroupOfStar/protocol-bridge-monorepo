@@ -1,13 +1,13 @@
 import { protocolCtx } from '../utils/protocolBridge';
 
 /**
- * 可以在任何地方注册事件
+ * 可以在任何地方注册事件，只要在Web组件build之前导入执行过即可
  */
-protocolCtx.on('selectDate', (params, successCallback, errorCallback) => {
-  console.log('selectDate params :>> ', params);
+protocolCtx.on('showLoading', (params, successCallback, errorCallback) => {
+  console.log('showLoading params :>> ', params);
   if (Math.random() > 0.5) {
-    successCallback('successfully')
+    successCallback(undefined)
   } else {
-    errorCallback(undefined)
+    errorCallback('')
   }
 })

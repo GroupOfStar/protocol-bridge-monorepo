@@ -1,6 +1,6 @@
 # protocol_bridge
 
-基座应用与h5应用之间进行postMessage通信
+ArkWeb通信协议，提供类型安全的postMessage解决方案，解耦鸿蒙原生与H5应用间的交互，可随时随地注册事件。
 
 ## Installation
 
@@ -60,11 +60,29 @@ type IProtocolEvent =
 
 - 接入子应用
 
-```ArkTs
+```extendtypescript
+// src/main/ets/jsApi/showLoading.ets
+import { protocolCtx } from '../utils/protocolBridge';
+
+/**
+ * 可以在任何地方注册事件，只要在Web组件build之前导入执行过即可
+ */
+protocolCtx.on('showLoading', (params, successCallback, errorCallback) => {
+  console.log('showLoading params :>> ', params);
+  if (Math.random() > 0.5) {
+    successCallback(undefined)
+  } else {
+    errorCallback('')
+  }
+})
+```
+
+```extendtypescript
 import { webview } from '@kit.ArkWeb';
 import { BusinessError } from '@kit.BasicServicesKit';
 import { createArkWebChannelPlugin } from "@cqx/protocol_bridge";
 import { protocolCtx } from '../utils/protocolBridge';
+import './../jsApi/showLoading' // 可以在任何地方注册事件，只要在Web组件build之前导入执行过即可
 
 @Entry
 @Component
@@ -73,17 +91,7 @@ struct Index {
   uiContext: UIContext = this.getUIContext();
 
   aboutToAppear(): void {
-    // 注册事件
-    protocolCtx.on('showLoading', (params, successCallback, errorCallback) => {
-      console.log('showLoading params :>> ', params);
-      if (Math.random() > 0.5) {
-        successCallback(undefined)
-      } else {
-        errorCallback('')
-      }
-    })
-
-    // 注册事件
+    // 也可以在此处注册事件
     protocolCtx.on('selectDate', (params, successCallback, errorCallback) => {
       console.log('selectDate params :>> ', params);
       if (Math.random() > 0.5) {

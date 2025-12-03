@@ -1,11 +1,11 @@
 {
   "name": "@cqx/protocol_bridge",
-  "version": "1.0.2-rc",
-  "description": "鸿蒙Web组件与H5应用之间进行postMessage的通信协议",
+  "version": "1.0.2",
+  "description": "ArkWeb通信协议，提供类型安全的postMessage解决方案，解耦鸿蒙原生与H5应用间的交互。",
   "main": "Index.ts",
   "author": "qunxing chen",
   "license": "MIT",
-  "keywords": ["jsapi", "protocol", "bridge", "postMessage", "web bridge"],
+  "keywords": ["jsapi", "protocol", "bridge", "postMessage", "web bridge",'js-api', 'js-bridge'],
   "homepage": "https://github.com/GroupOfStar",
   "repository": "https://github.com/GroupOfStar/protocol-bridge-monorepo/tree/main/packages/protocol-bridge",
   "dependencies": {}

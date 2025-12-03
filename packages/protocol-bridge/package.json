@@ -1,7 +1,7 @@
 {
   "name": "protocol-bridge",
   "private": false,
-  "description": "js-api通信协议",
+  "description": "跨应用通信协议核心，提供类型安全的channel解决方案，简化Web与H5应用间的可靠双向通信。",
   "version": "1.0.0",
   "type": "module",
   "main": "./dist/index.cjs.js",

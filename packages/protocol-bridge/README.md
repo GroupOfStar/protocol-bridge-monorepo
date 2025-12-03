@@ -278,14 +278,23 @@ export function createArkWebChannelPlugin(controller: webview.WebviewController)
 }
 ```
 
-```ts
+```extendtypescript
 import { createArkWebChannelPlugin } from "../utils/arkWebChannelPlugin";
 import { protocolCtx } from '../utils/protocolBridge'; // 跟上面 创建通信协议上下文 一样
 
-// /index.ets
-  Web({ src: '', controller: this.controller })
-    .javaScriptAccess(true)
-    .fileAccess(true)
-    .domStorageAccess(true)
-    .onPageEnd(() => protocolCtx.onContainerLoaded(createArkWebChannelPlugin(this.controller)))
+@Entry
+@Component
+struct WebComponent {
+  controller: webview.WebviewController = new webview.WebviewController();
+  
+  build() {
+    Column() {
+      Web({ src: '', controller: this.controller })
+        .javaScriptAccess(true)
+        .fileAccess(true)
+        .domStorageAccess(true)
+        .onPageEnd(() => protocolCtx.onContainerLoaded(createArkWebChannelPlugin(this.controller)))
+    }
+  }
+}
 ```
